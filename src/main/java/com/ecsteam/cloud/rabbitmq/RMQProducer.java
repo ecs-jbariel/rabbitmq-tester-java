@@ -12,8 +12,8 @@ public class RMQProducer extends RMQConnection {
 		super();
 	}
 
-	public RMQProducer(RMQConnectInfo info) {
-		super(info);
+	public RMQProducer(RMQProperties props) {
+		super(props);
 	}
 
 	@Override

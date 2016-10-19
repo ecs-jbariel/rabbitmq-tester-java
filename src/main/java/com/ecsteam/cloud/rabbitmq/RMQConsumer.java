@@ -15,7 +15,7 @@ public class RMQConsumer extends RMQConnection {
 		super();
 	}
 
-	public RMQConsumer(RMQConnectInfo info) {
+	public RMQConsumer(RMQProperties info) {
 		super(info);
 	}
 

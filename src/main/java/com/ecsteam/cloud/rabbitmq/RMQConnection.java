@@ -14,7 +14,7 @@ public abstract class RMQConnection {
 
 	protected Connection currentConnection;
 	protected Channel currentChannel;
-	protected RMQConnectInfo connectionInfo;
+	protected RMQProperties connectionInfo;
 
 	protected String exchangeName = "defaultExchangeName";
 	protected String queueName = "defaultQueueName";
@@ -24,9 +24,9 @@ public abstract class RMQConnection {
 		super();
 	}
 
-	public RMQConnection(RMQConnectInfo info) {
+	public RMQConnection(RMQProperties props) {
 		this();
-		setConnectionInfo(info);
+		setConnectionInfo(props);
 	}
 
 	public abstract void start() throws IOException;
@@ -47,16 +47,16 @@ public abstract class RMQConnection {
 		}
 	}
 
-	public void setConnectionInfo(RMQConnectInfo info) {
-		this.connectionInfo = info;
+	public void setConnectionInfo(RMQProperties props) {
+		this.connectionInfo = props;
 	}
 
 	protected void connect() throws IOException {
 		connect(connectionInfo);
 	}
 
-	protected void connect(RMQConnectInfo info) throws IOException {
-		createConnection(setupFactory(info));
+	protected void connect(RMQProperties props) throws IOException {
+		createConnection(setupFactory(props));
 		postConnect();
 	}
 
@@ -65,13 +65,13 @@ public abstract class RMQConnection {
 		postConnect();
 	}
 
-	private ConnectionFactory setupFactory(RMQConnectInfo info) {
+	private ConnectionFactory setupFactory(RMQProperties props) {
 		ConnectionFactory factory = new ConnectionFactory();
-		factory.setUsername(info.getUsername());
-		factory.setPassword(info.getPassword());
-		factory.setVirtualHost(info.getvHost());
-		factory.setHost(info.getHostname());
-		factory.setPort(info.getPort());
+		factory.setUsername(props.getUsername());
+		factory.setPassword(props.getPassword());
+		factory.setVirtualHost(props.getvHost());
+		factory.setHost(props.getHostname());
+		factory.setPort(props.getPort());
 		return factory;
 	}
 

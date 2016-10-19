@@ -1,7 +1,13 @@
 package com.ecsteam.cloud.rabbitmq;
 
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
+
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 
 import com.ecsteam.cloud.rabbitmq.Out.LogLevel;
 
@@ -9,16 +15,20 @@ public class RabbitMQTester {
 
 	public static ScheduledThreadPoolExecutor globalThreadPool = new ScheduledThreadPoolExecutor(10);
 
-	private static boolean doProduce = true;
-	private static boolean doConsume = true;
+	private static boolean doProduce = false;
+	private static boolean doConsume = false;
 
 	public static void main(String[] args) {
-		Out.setLogLevel(LogLevel.TRACE);
 		Out.i("Starting...");
 
-		RMQConnectInfo info = new RMQConnectInfo("", "", "test", "localhost", 5672);
-		final RMQProducer rmqProducer = new RMQProducer(info);
-		final RMQConsumer rmqConsumer = new RMQConsumer(info);
+		RMQProperties properties = loadProperties();
+
+		Out.setLogLevel(properties.getLogLevel());
+		doProduce = properties.isProducer();
+		doConsume = properties.isConsumer();
+
+		final RMQProducer rmqProducer = new RMQProducer(properties);
+		final RMQConsumer rmqConsumer = new RMQConsumer(properties);
 		Thread producer = null;
 		Thread consumer = null;
 
@@ -99,6 +109,43 @@ public class RabbitMQTester {
 
 		Out.i("Exiting...");
 		System.exit(0);
+	}
+
+	private static RMQProperties loadProperties() {
+		Out.d("Loading properties...");
+		RMQProperties props = new RMQProperties();
+
+		Properties propfile = new Properties();
+		InputStream input = null;
+
+		try {
+			input = new FileInputStream("props.properties");
+			propfile.load(input);
+
+			props.setUsername(StringUtils.trimToEmpty(propfile.getProperty("username")));
+			props.setPassword(StringUtils.trimToEmpty(propfile.getProperty("password")));
+			props.setPort(NumberUtils.toInt(propfile.getProperty("port", "5672")));
+			props.setHostname(StringUtils.trimToEmpty(propfile.getProperty("hostname", "localhost")));
+			props.setvHost(StringUtils.trimToEmpty(propfile.getProperty("vhost")));
+			props.setLogLevel(LogLevel.valueOf(StringUtils.trimToEmpty(propfile.getProperty("loglevel", "INFO"))));
+			props.setProducer(Boolean.parseBoolean(StringUtils.trimToEmpty(propfile.getProperty("producer", "false"))));
+			props.setConsumer(Boolean.parseBoolean(StringUtils.trimToEmpty(propfile.getProperty("consumer", "false"))));
+
+		} catch (IOException e) {
+			Out.e("Exception loading properties file");
+			e.printStackTrace();
+		} finally {
+			if (null != input) {
+				try {
+					input.close();
+				} catch (IOException e) {
+					Out.w("Error closing input...");
+				}
+			}
+		}
+
+		Out.i("Found properties: %s", props);
+		return props;
 	}
 
 }

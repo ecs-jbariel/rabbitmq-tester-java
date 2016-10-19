@@ -1,0 +1,8 @@
+username=
+password=
+port=5672
+hostname=localhost
+vhost=
+loglevel=INFO
+producer=true
+consumer=true
