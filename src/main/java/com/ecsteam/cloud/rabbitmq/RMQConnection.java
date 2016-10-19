@@ -1,9 +1,6 @@
 package com.ecsteam.cloud.rabbitmq;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
 import java.util.concurrent.TimeoutException;
 
 import com.rabbitmq.client.Channel;
@@ -79,7 +76,9 @@ public abstract class RMQConnection {
 		ConnectionFactory factory = new ConnectionFactory();
 		try {
 			factory.setUri(uri);
-		} catch (KeyManagementException | NoSuchAlgorithmException | URISyntaxException e) {
+			// } catch (KeyManagementException | NoSuchAlgorithmException |
+			// URISyntaxException e) {
+		} catch (Exception e) {
 			Out.e("Error setting up ConnectionFactory with URI...");
 			e.printStackTrace();
 		}

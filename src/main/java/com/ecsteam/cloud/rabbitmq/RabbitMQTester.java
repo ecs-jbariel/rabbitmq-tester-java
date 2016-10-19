@@ -51,6 +51,7 @@ public class RabbitMQTester {
 		}
 
 		if (doConsume) {
+			// TODO jbariel => support more than 1 consumer
 			Out.d("Creating consumer...");
 			consumer = new Thread(new Runnable() {
 
@@ -130,6 +131,8 @@ public class RabbitMQTester {
 			props.setLogLevel(LogLevel.valueOf(StringUtils.trimToEmpty(propfile.getProperty("loglevel", "INFO"))));
 			props.setProducer(Boolean.parseBoolean(StringUtils.trimToEmpty(propfile.getProperty("producer", "false"))));
 			props.setConsumer(Boolean.parseBoolean(StringUtils.trimToEmpty(propfile.getProperty("consumer", "false"))));
+			props.setNumberOfConsumers(NumberUtils.toInt(propfile.getProperty("numberOfConsumers", "1")));
+			props.setProducerMessageRate(NumberUtils.toLong(propfile.getProperty("producerMessageRate", "1000L")));
 
 		} catch (IOException e) {
 			Out.e("Exception loading properties file");

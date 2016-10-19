@@ -34,7 +34,7 @@ public class RMQProducer extends RMQConnection {
 				}
 
 			}
-		}, 0L, 1L, TimeUnit.SECONDS);
+		}, 0L, connectionInfo.getProducerMessageRate(), TimeUnit.MILLISECONDS);
 
 	}
 

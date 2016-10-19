@@ -14,6 +14,8 @@ public class RMQProperties {
 	private LogLevel logLevel;
 	private boolean isProducer;
 	private boolean isConsumer;
+	private int numberOfConsumers;
+	private long producerMessageRate;
 
 	public RMQProperties() {
 		super();
@@ -90,6 +92,22 @@ public class RMQProperties {
 
 	public void setConsumer(boolean isConsumer) {
 		this.isConsumer = isConsumer;
+	}
+
+	public int getNumberOfConsumers() {
+		return numberOfConsumers;
+	}
+
+	public void setNumberOfConsumers(int numberOfConsumers) {
+		this.numberOfConsumers = numberOfConsumers;
+	}
+
+	public long getProducerMessageRate() {
+		return producerMessageRate;
+	}
+
+	public void setProducerMessageRate(long producerMessageRate) {
+		this.producerMessageRate = producerMessageRate;
 	}
 
 	@Override
